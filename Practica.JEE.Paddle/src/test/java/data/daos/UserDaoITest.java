@@ -42,7 +42,7 @@ public class UserDaoITest {
     public void testFindByTokenValue() {
         User u1 = (User) daosService.getMap().get("u1");
         Token t1 = (Token) daosService.getMap().get("tu1");
-        assertEquals(u1, userDao.findByTokenValue(t1.getValue()));
-        assertNull(userDao.findByTokenValue("kk"));
+        assertEquals(u1, userDao.findByTokenValueNoExpired(t1.getValue()));
+        assertNull(userDao.findByTokenValueNoExpired("kk"));
     }
 }

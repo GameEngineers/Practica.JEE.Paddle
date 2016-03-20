@@ -82,7 +82,18 @@ public class DaosService {
         List<Token> tokenList = new ArrayList<>();
         Token token;
         for (User user : users) {
-            token = new Token(user);
+            token = new Token(user, Token.HOURS_TO_EXPIRE);
+            tokenDao.save(token);
+            tokenList.add(token);
+        }
+        return tokenList;
+    }
+    
+    public List<Token> createExpiredTokens(User[] users){
+    	List<Token> tokenList = new ArrayList<>();
+        Token token;
+        for (User user : users) {
+            token = new Token(user, -1);
             tokenDao.save(token);
             tokenList.add(token);
         }
