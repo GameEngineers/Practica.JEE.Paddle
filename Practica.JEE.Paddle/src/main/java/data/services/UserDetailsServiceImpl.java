@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String usernameOrEmailOrTokenValue) throws UsernameNotFoundException {
-        User user = userDao.findByTokenValueNoExpired(usernameOrEmailOrTokenValue);
+        User user = userDao.findByNoExpiredTokenValue(usernameOrEmailOrTokenValue);
         if (user != null) {
             List<Role> roleList = authorizationDao.findRoleByUser(user);
             return this.userBuilder(user.getUsername(), new BCryptPasswordEncoder().encode(""), roleList);

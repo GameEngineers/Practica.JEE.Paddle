@@ -8,7 +8,7 @@ import data.entities.User;
 public interface UserDao extends JpaRepository<User, Integer> {
     
     @Query("select token.user from Token token where token.value = ?1 and token.expires > CURRENT_TIMESTAMP")
-    public User findByTokenValueNoExpired(String tokenValue);
+    public User findByNoExpiredTokenValue(String tokenValue);
 
     @Query("select user from User user where user.username = ?1 or user.email = ?1")
     public User findByUsernameOrEmail(String id);
