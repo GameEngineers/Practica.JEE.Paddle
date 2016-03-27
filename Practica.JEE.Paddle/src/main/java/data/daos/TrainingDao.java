@@ -9,15 +9,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import data.entities.Court;
 import data.entities.Training;
+import data.entities.User;
 
-public interface TrainingDao extends JpaRepository<Training, Integer>, TrainingExtended {
+public interface TrainingDao extends JpaRepository<Training, Integer> {
 
 	List<Training> findByCourt(Court court);
 	
-	@Transactional
-	@Query("delete from Training training where training.finalDate < CURRENT_DATE")
-	public void deleteAllFinalized();
+//	@Transactional
+//	@Query("delete from Training training where training.finalDate < CURRENT_DATE")
+//	public void deleteAllFinalized();
 	
-	public List<Training> findByDayOfWeek(DayOfWeek dayOfWeek);
+	@Query("select training from Training training where training.dayOfWeek = ?1 and training.finalDate >= CURRENT_DATE")
+	public List<Training> findCurrentsByDayOfWeek(DayOfWeek dayOfWeek);
 
+	public List<Training> findByTrainer(User trainer);
+	
+	@Query("select training from Training training where training.finalDate >= CURRENT_DATE")
+	public List<Training> findAllCurrent();
+	
+	@Query("SELECT t FROM Training t INNER JOIN t.players player where player = ?1")
+	public List<Training> findByPlayersContaining(User player);
 }

@@ -7,99 +7,110 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Training {
 
-	public static final int NUM_TRAINING_PLAYERS = 4;
-	@Id
-	@GeneratedValue
-	private int id;
-	
-	@Column(nullable=false)
-	private String trainingName;
+    public static final int NUM_TRAINING_PLAYERS = 4;
 
-	@ManyToOne
-	@JoinColumn
-	private User trainer;
-	
-	@ManyToOne
-	@JoinColumn
-	private Court court;
-	
-	@Column(nullable=false)
-	@Enumerated(EnumType.STRING)
-	private DayOfWeek dayOfWeek;
-	
-	@Temporal(TemporalType.TIME)
-	@Column(nullable=false)
-	private Date time;
-	
-	@ManyToMany(fetch=FetchType.EAGER)
-	private List<User> players;
-	
-	@Temporal(TemporalType.DATE)
-	private Calendar initialDate;
-	
-	@Temporal(TemporalType.DATE)
-	private Calendar finalDate;
-	
-	public Training(String trainingName, User trainer, Court court, DayOfWeek dayOfWeek, Date time, List<User> players, Calendar initialDate, Calendar finalDate){
-		this.trainingName = trainingName;
-		this.trainer = trainer;
-		this.dayOfWeek = dayOfWeek;
-		this.time = time;
-		this.players = players;
-		this.court = court;
-		this.initialDate = initialDate;
-		this.finalDate = finalDate;
-	}
+    @Id
+    @GeneratedValue
+    private int id;
 
-	public DayOfWeek getDayOfWeek() {
-		return dayOfWeek;
-	}
+    @Column(nullable = false)
+    private String trainingName;
 
-	public void setDayOfWeek(DayOfWeek dayOfWeek) {
-		this.dayOfWeek = dayOfWeek;
-	}
+    @ManyToOne
+    @JoinColumn
+    private User trainer;
 
-	public Date getTime() {
-		return time;
-	}
+    @ManyToOne
+    @JoinColumn
+    private Court court;
 
-	public void setTime(Date time) {
-		this.time = time;
-	}
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek dayOfWeek;
 
-	public int getId() {
-		return id;
-	}
+    @Temporal(TemporalType.TIME)
+    @Column(nullable = false)
+    private Date time;
 
-	public User getTrainer() {
-		return trainer;
-	}
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Size(max=NUM_TRAINING_PLAYERS)
+    private List<User> players;
 
-	public List<User> getPlayers() {
-		return players;
-	}
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
+    private Calendar initialDate;
 
-	public Calendar getInitialDate() {
-		return initialDate;
-	}
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
+    private Calendar finalDate;
 
-	public void setInitialDate(Calendar initialDate) {
-		this.initialDate = initialDate;
-	}
+    public Training() {
+    }
 
-	public Calendar getFinalDate() {
-		return finalDate;
-	}
+    public Training(String trainingName, User trainer, Court court, DayOfWeek dayOfWeek, Date time, List<User> players,
+            Calendar initialDate, Calendar finalDate) {
+        assert trainer != null && court != null && dayOfWeek != null && time != null;
+        assert initialDate != null && finalDate != null && initialDate.getTimeInMillis() <= finalDate.getTimeInMillis();
+        this.trainingName = trainingName;
+        this.trainer = trainer;
+        this.dayOfWeek = dayOfWeek;
+        this.time = time;
+        this.players = players;
+        this.court = court;
+        this.initialDate = initialDate;
+        this.finalDate = finalDate;
+    }
 
-	public void setFinalDate(Calendar finalDate) {
-		this.finalDate = finalDate;
-	}
+    public DayOfWeek getDayOfWeek() {
+        return dayOfWeek;
+    }
 
-	@Override
+    public void setDayOfWeek(DayOfWeek dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public User getTrainer() {
+        return trainer;
+    }
+
+    public List<User> getPlayers() {
+        return players;
+    }
+
+    public Calendar getInitialDate() {
+        return initialDate;
+    }
+
+    public void setInitialDate(Calendar initialDate) {
+        this.initialDate = initialDate;
+    }
+
+    public Calendar getFinalDate() {
+        return finalDate;
+    }
+
+    public void setFinalDate(Calendar finalDate) {
+        this.finalDate = finalDate;
+    }
+
+    @Override
     public int hashCode() {
         return id;
     }
@@ -120,10 +131,11 @@ public class Training {
 
     @Override
     public String toString() {
-        
-        return "Training [id=" + id + ", trainer=" + trainer + ", court=" + court + ", time=" + new SimpleDateFormat("hh:mm").format(time.getTime()) + "dayOfWeek=" + dayOfWeek.toString() + 
-        	 ", players=" + players + "initialDate=" +  new SimpleDateFormat("dd/MM/yyyy").format(initialDate.getTime()) + 
-        	 ",finalDate=" +  new SimpleDateFormat("dd/MM/yyyy").format(finalDate.getTime()) + "]";
+
+        return "Training [id=" + id + ", trainer=" + trainer + ", court=" + court + ", time="
+                + new SimpleDateFormat("hh:mm").format(time.getTime()) + "dayOfWeek=" + dayOfWeek.toString() + ", players=" + players
+                + "initialDate=" + new SimpleDateFormat("dd/MM/yyyy").format(initialDate.getTime()) + ",finalDate="
+                + new SimpleDateFormat("dd/MM/yyyy").format(finalDate.getTime()) + "]";
     }
-	
+
 }
