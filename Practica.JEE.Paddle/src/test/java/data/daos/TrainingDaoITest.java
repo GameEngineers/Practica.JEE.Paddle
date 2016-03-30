@@ -70,6 +70,7 @@ public class TrainingDaoITest {
         trainingDao.save(t);
         List<Training> trainings = trainingDao.findAllCurrent();
         assertEquals(28, trainings.size());
+        trainingDao.delete(t);
     }
 
     @Test
@@ -88,5 +89,7 @@ public class TrainingDaoITest {
         
         List<Training> trainings = trainingDao.findByPlayersContaining(u);
         assertEquals(1, trainings.size());
+        trainingDao.delete(t);
+        userDao.delete(u);
     }   
 }
