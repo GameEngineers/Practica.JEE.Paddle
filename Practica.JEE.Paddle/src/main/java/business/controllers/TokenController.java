@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 
 import data.daos.TokenDao;
 import data.daos.UserDao;
+import data.entities.Encrypt;
 import data.entities.Token;
 import data.entities.User;
 
@@ -35,4 +36,11 @@ public class TokenController {
         tokenDao.save(token);
         return token.getValue();
     }
+    
+    public boolean IsValid(String basicAuth){
+    	String[] auth = new Encrypt().encryptInString(basicAuth).split(":");
+    	String tokenValue = auth[1];
+    	Token token = tokenDao.findByValue(tokenValue);
+    	return !token.isExpired();
+  	}
 }

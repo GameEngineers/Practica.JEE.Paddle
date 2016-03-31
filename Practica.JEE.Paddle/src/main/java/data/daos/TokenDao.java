@@ -12,6 +12,8 @@ public interface TokenDao extends JpaRepository<Token, Integer> {
 
     Token findByUser(User user);
     
+    Token findByValue(String value);
+    
     @Transactional
     @Modifying
     @Query("delete from Token t where t.expires < CURRENT_TIMESTAMP")
