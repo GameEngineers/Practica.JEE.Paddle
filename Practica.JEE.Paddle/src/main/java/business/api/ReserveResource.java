@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import business.api.exceptions.InvalidCourtReserveException;
 import business.api.exceptions.InvalidDateException;
-import business.api.exceptions.TokenExpiredException;
 import business.controllers.CourtController;
 import business.controllers.ReserveController;
 import business.controllers.TokenController;
@@ -29,13 +28,6 @@ public class ReserveResource {
 
 	private CourtController courtController;
 
-	private TokenController tokenController;
-
-	@Autowired
-	public void setTokenController(TokenController tokenController) {
-		this.tokenController = tokenController;
-	}
-
 	@Autowired
 	public void setCourtController(CourtController courtController) {
 		this.courtController = courtController;
@@ -47,12 +39,8 @@ public class ReserveResource {
 	}
 
 	@RequestMapping(value = Uris.AVAILABILITY, method = RequestMethod.GET)
-	public Availability showAvailability(@RequestHeader(value = "Authorization") String basic,
-			@RequestParam(required = false) Long day) throws InvalidDateException, TokenExpiredException {
+	public Availability showAvailability(@RequestParam(required = false) Long day) throws InvalidDateException {
 		
-		if (!tokenController.IsValid(basic)) {
-			throw new TokenExpiredException("token :" + basic);
-		}
 		Calendar calendarDay = Calendar.getInstance();
 		if (day != null) {
 			calendarDay.setTimeInMillis(day);
@@ -74,11 +62,9 @@ public class ReserveResource {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public void reserveCourt(@RequestHeader(value = "Authorization") String basic, @AuthenticationPrincipal User activeUser, @RequestBody AvailableTime availableTime)
-			throws InvalidCourtReserveException, InvalidDateException, TokenExpiredException {
-		if (!tokenController.IsValid(basic)) {
-			throw new TokenExpiredException("token :" + basic);
-		}
+	public void reserveCourt(@AuthenticationPrincipal User activeUser, @RequestBody AvailableTime availableTime)
+			throws InvalidCourtReserveException, InvalidDateException {
+
 		if (!courtController.exist(availableTime.getCourtId())) {
 			throw new InvalidCourtReserveException("" + availableTime.getCourtId());
 		}
